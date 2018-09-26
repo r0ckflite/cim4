@@ -11,7 +11,7 @@
 		<relativePath>./pom2.xml</relativePath>
 	</parent>
 
-	<artifactId>chapter10-servlet-swagger-xml</artifactId>
+	<artifactId>cim4</artifactId>
 	<name>Camel in Action 2 :: Chapter 10 :: REST with Servlet and Swagger using XML DSL</name>
 	<packaging>war</packaging>
 
@@ -102,7 +102,7 @@
 				<version>0.4.34</version>
 				<configuration>
 					<outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-					<sourceDirectory>${basedir}/src/main/resources/json/create_der_group.json</sourceDirectory>
+					<sourceDirectory>${basedir}/src/main/resources/json/createEndDeviceControls.json</sourceDirectory>
 					<targetPackage>com.sixthc.ecg.jsonpojo</targetPackage>
 					<useCommonsLang3>true</useCommonsLang3>
 					<sourceType>json</sourceType>
@@ -126,6 +126,7 @@
 						<goals>
 							<goal>wsdl2java</goal>
 						</goals>
+
 						<configuration>
 						<sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
 							<defaultOptions>
@@ -133,7 +134,7 @@
 							</defaultOptions>
 							<wsdlOptions>
 								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/CIM_Request.wsdl</wsdl>
+									<wsdl>${basedir}/src/main/resources/wsdl/ExecuteEndDeviceControls.wsdl</wsdl>
 									<extraargs>
                                     <extraarg>-client</extraarg>
                                     <extraarg>-server</extraarg>
