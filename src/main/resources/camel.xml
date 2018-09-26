@@ -7,10 +7,7 @@
          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<!-- a bean for order service -->
-	<bean id="orderService"
-		class="camelinaction.dummy.DummyOrderService" />
-
-	<bean id="derService" class="com.sixthc.ecg.DERServiceImpl" />
+	<bean id="endDeviceControlsService" class="com.sixthc.ecg.impl.EndDeviceControlsServiceImpl" />
 
 	<camelContext
 		xmlns="http://camel.apache.org/schema/spring">
@@ -55,7 +52,7 @@
 		</onException>
 
 		<restConfiguration component="servlet"
-			bindingMode="json" contextPath="chapter10-servlet-swagger-xml/rest"
+			bindingMode="json" contextPath="cim4/rest"
 			port="8080" apiContextPath="api-doc" apiContextListing="true"
 			enableCORS="true">
 
@@ -74,36 +71,24 @@
 
 		</restConfiguration>
 
-		<rest path="/derGroup" consumes="application/json"
+		<rest path="/endDeviceControls" consumes="application/json"
 			produces="application/json">
 			<description>CIMRequest</description>
 
-			<get uri="/{mrid}" outType="com.sixthc.ecg.jsonpojo.Der1DERGroup">
-				<description>Returns a der-group message</description>
+			<get uri="/{mrid}" outType="ch.iec.tc57._2011.schema.message.ReplyType">
+				<description>Returns a end device controls message</description>
 				<param name="id" type="path" description="The order id" />
 				<responseMessage code="200"
 					message="The order with the given id" />
 				<responseMessage code="404"
 					message="Order not found" />
 				<responseMessage code="500" message="Server error" />
-				<to uri="bean:derService?method=getDER(${header.mrid})" />
+				<to uri="bean:endDeviceControlsService?method=get(${header.mrid})" />
 			</get>
-		</rest>
-
-		<rest path="/derGroup2" consumes="application/json"
-			produces="application/json">
-			<description>CIMRequest</description>
-
-			<get uri="/{mrid}" outType="com.sixthc.ecg.jsonpojo.Der1DERGroup">
-				<description>Returns a der-group message</description>
-				<param name="id" type="path" description="The order id" />
-				<responseMessage code="200"
-					message="The order with the given id" />
-				<responseMessage code="404"
-					message="Order not found" />
-				<responseMessage code="500" message="Server error" />
-				<to uri="bean:derService?method=getDERGroup(${header.mrid})" />
-			</get>
+			<post uri="/create" type="com.sixthc.ecg.jsonpojo.CreateEndDeviceControls" outType="ch.iec.tc57._2011.schema.message.ReplyType">
+			<description>Posts end device controls request</description>
+			<to uri="bean:endDeviceControlsService?method=create" />
+			</post>
 		</rest>
 
 		<!-- <rest path="/orders" consumes="application/json" produces="application/json"> -->
