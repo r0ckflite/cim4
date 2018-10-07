@@ -147,7 +147,7 @@
 							</defaultOptions>
 							<wsdlOptions>
 								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/ExecuteEndDeviceControls.wsdl</wsdl>
+									<wsdl>${basedir}/src/main/webapp/WEB-INF/wsdl/ExecuteEndDeviceControls.wsdl</wsdl>
 									<extraargs>
 										<extraarg>-client</extraarg>
 										<extraarg>-server</extraarg>
