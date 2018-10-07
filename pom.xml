@@ -32,6 +32,18 @@
 			<artifactId>camel-servlet</artifactId>
 		</dependency>
 
+		<!-- overcome jboss class loader problem -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>javax.xml.ws</groupId> -->
+<!-- 			<artifactId>jaxws-api</artifactId> -->
+<!-- 			<version>2.2.8</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.sun.xml.ws</groupId> -->
+<!-- 			<artifactId>jaxws-rt</artifactId> -->
+<!-- 			<version>2.1.4</version> -->
+<!-- 		</dependency> -->
+
 		<!-- we need spring web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -119,6 +131,7 @@
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>3.2.6</version>
 				<executions>
 					<execution>
 						<id>generate-sources</id>
@@ -128,7 +141,7 @@
 						</goals>
 
 						<configuration>
-						<sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
+							<sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
 							<defaultOptions>
 								<noAddressBinding>true</noAddressBinding>
 							</defaultOptions>
@@ -136,10 +149,10 @@
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/ExecuteEndDeviceControls.wsdl</wsdl>
 									<extraargs>
-                                    <extraarg>-client</extraarg>
-                                    <extraarg>-server</extraarg>
-                                    <extraarg>-impl</extraarg>
-                                    </extraargs>
+										<extraarg>-client</extraarg>
+										<extraarg>-server</extraarg>
+										<extraarg>-impl</extraarg>
+									</extraargs>
 								</wsdlOption>
 							</wsdlOptions>
 						</configuration>
