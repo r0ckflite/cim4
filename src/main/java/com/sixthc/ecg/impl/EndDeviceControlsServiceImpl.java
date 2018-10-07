@@ -1,7 +1,15 @@
 package com.sixthc.ecg.impl;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
@@ -11,8 +19,15 @@ import com.sixthc.ecg.DeviceNotFoundException;
 import com.sixthc.ecg.EndDeviceControlsService;
 import com.sixthc.ecg.jsonpojo.CreateEndDeviceControls;
 
+import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControl;
+import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControl.EndDeviceControlType;
+import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControls;
+import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceGroup;
+import ch.iec.tc57._2011.enddevicecontrols_.Name;
 import ch.iec.tc57._2011.schema.message.ErrorType;
+import ch.iec.tc57._2011.schema.message.HeaderType;
 import ch.iec.tc57._2011.schema.message.ReplyType;
+import ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType;
 import ch.iec.tc57._2017.executeenddevicecontrols.EndDeviceControlsPort;
 import ch.iec.tc57._2017.executeenddevicecontrols.ExecuteEndDeviceControls;
 import ch.iec.tc57._2017.executeenddevicecontrols.FaultMessage;
@@ -25,17 +40,29 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 	public ReplyType get(int mrid) throws DeviceNotFoundException {
 		ReplyType reply = new ReplyType();
 		reply.setResult("OK");
-		
+
 		ErrorType error = new ErrorType();
 		error.setCode("0.0");
 		reply.getError().add(error);
-		
+
 		return reply;
 	}
 
 	@Override
 	public void update(CreateEndDeviceControls group) throws DeviceInvalidException {
 		// TODO Auto-generated method stub
+
+	}
+	
+	public XMLGregorianCalendar stringToDate(String dt) throws ParseException, DatatypeConfigurationException {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date date = format.parse(dt);
+
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+
+		XMLGregorianCalendar xmlGregCal =  DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+		return xmlGregCal;
 
 	}
 
@@ -47,26 +74,65 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 		final QName SERVICE_NAME = new QName("http://iec.ch/TC57/2017/ExecuteEndDeviceControls",
 				"ExecuteEndDeviceControls");
 		URL wsdlURL = ExecuteEndDeviceControls.WSDL_LOCATION;
-		
+
 		ExecuteEndDeviceControls ss = new ExecuteEndDeviceControls(wsdlURL, SERVICE_NAME);
 		EndDeviceControlsPort port = ss.getEndDeviceControlsPort();
 
 		{
 			logger.debug("Invoking createEndDeviceControls...");
 			ch.iec.tc57._2011.schema.message.HeaderType _createEndDeviceControls_headerVal = null;
-			javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.HeaderType> _createEndDeviceControls_header = new javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.HeaderType>(
+			javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.HeaderType> header = new javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.HeaderType>(
 					_createEndDeviceControls_headerVal);
 			ch.iec.tc57._2011.schema.message.RequestType _createEndDeviceControls_request = null;
-			ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType _createEndDeviceControls_payloadVal = null;
+			ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType payload = new EndDeviceControlsPayloadType();
 			javax.xml.ws.Holder<ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType> _createEndDeviceControls_payload = new javax.xml.ws.Holder<ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType>(
-					_createEndDeviceControls_payloadVal);
+					payload);
 			javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.ReplyType> _createEndDeviceControls_reply = new javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.ReplyType>();
-			try {
-				port.createEndDeviceControls(_createEndDeviceControls_header, _createEndDeviceControls_request,
-						_createEndDeviceControls_payload, _createEndDeviceControls_reply);
 
-				logger.debug("createEndDeviceControls._createEndDeviceControls_header="
-						+ _createEndDeviceControls_header.value);
+
+			// Populate header data from POJO to SOAP message
+			if (group.getHeader() != null) {
+				header.value = new HeaderType();
+				logger.debug("populating soap header");
+				header.value.setVerb(group.getHeader().getVerb());
+				header.value.setNoun(group.getHeader().getNoun());
+				try {
+					header.value.setTimestamp(stringToDate(group.getHeader().getTimestamp()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DatatypeConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				header.value.setMessageID(group.getHeader().getMessageID());
+				header.value.setCorrelationID(group.getHeader().getCorrelationID());
+			}
+			
+			// Populate payload from POJO to SOAP message
+			if( group.getPayload() != null ) {
+
+				EndDeviceControls edcs = new EndDeviceControls();
+				payload.setEndDeviceControls(edcs);
+				EndDeviceControl edc = new EndDeviceControl();
+				edcs.getEndDeviceControl().add(edc);
+				edc.setMRID(group.getPayload().getEndDeviceControls().getEndDeviceControl().getMRID());
+				EndDeviceControlType edct = new EndDeviceControlType();
+				edct.setRef(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceControlType().getRef());
+				edc.setEndDeviceControlType(edct);
+				EndDeviceGroup edg = new EndDeviceGroup();
+				edc.getEndDeviceGroups().add(edg);
+				Name name = new Name();
+				name.setName(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceGroups().getNames().getName());
+				edg.getNames().add(name);
+			}
+			
+
+			try {
+				port.createEndDeviceControls(header, _createEndDeviceControls_request, _createEndDeviceControls_payload,
+						_createEndDeviceControls_reply);
+
+				logger.debug("createEndDeviceControls._createEndDeviceControls_header=" + header.value);
 				logger.debug("createEndDeviceControls._createEndDeviceControls_payload="
 						+ _createEndDeviceControls_payload.value);
 				logger.debug("createEndDeviceControls._createEndDeviceControls_reply="
@@ -77,7 +143,7 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 				logger.debug(e.toString());
 			}
 		}
-		
+
 		throw new DeviceInvalidException("error occurred");
 
 	}
