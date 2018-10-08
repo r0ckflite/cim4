@@ -26,7 +26,6 @@ import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControl.EndDeviceControlTyp
 import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControls;
 import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceGroup;
 import ch.iec.tc57._2011.enddevicecontrols_.Name;
-import ch.iec.tc57._2011.schema.message.ErrorType;
 import ch.iec.tc57._2011.schema.message.HeaderType;
 import ch.iec.tc57._2011.schema.message.ReplyType;
 import ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType;
@@ -39,15 +38,31 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 	final static Logger logger = Logger.getLogger(EndDeviceControlsServiceImpl.class);
 
 	@Override
-	public ReplyType get(int mrid) throws DeviceNotFoundException {
-		ReplyType reply = new ReplyType();
-		reply.setResult("OK");
+	public EndDeviceControlsPayloadType get(int mrid)
+			throws DeviceNotFoundException {
 
-		ErrorType error = new ErrorType();
-		error.setCode("0.0");
-		reply.getError().add(error);
+		// throw NOT FOUND for id = 86
+		if (mrid == 86) {
+			throw new DeviceNotFoundException("device not found");
+		}
 
-		return reply;
+		EndDeviceControlsPayloadType payload = new EndDeviceControlsPayloadType();
+
+		EndDeviceControls edcs = new EndDeviceControls();
+		payload.setEndDeviceControls(edcs);
+		EndDeviceControl edc = new EndDeviceControl();
+		edcs.getEndDeviceControl().add(edc);
+		edc.setMRID(String.valueOf(mrid));
+		EndDeviceControlType edct = new EndDeviceControlType();
+		edct.setRef("2.31.0.18");
+		edc.setEndDeviceControlType(edct);
+		EndDeviceGroup edg = new EndDeviceGroup();
+		edc.getEndDeviceGroups().add(edg);
+		Name name = new Name();
+		name.setName("DG2");
+		edg.getNames().add(name);
+
+		return payload;
 	}
 
 	@Override
@@ -72,7 +87,7 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 	public ReplyType create(CreateEndDeviceControls group) throws DeviceInvalidException, InvalidJSON {
 		logger.debug("create : "
 				+ String.valueOf(group.getPayload().getEndDeviceControls().getEndDeviceControl().getMRID()));
-		
+
 		logger.debug("forceError = " + group.getForceError());
 		if (group.getForceError() != null & "true".equals(group.getForceError())) {
 			throw new InvalidJSON("forced error");
@@ -84,8 +99,6 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 
 		ExecuteEndDeviceControls ss = new ExecuteEndDeviceControls(wsdlURL, SERVICE_NAME);
 		EndDeviceControlsPort port = ss.getEndDeviceControlsPort();
-
-
 
 		// Set the SOAP server address dynamically based on SOAPServerURL
 		if (group.getSOAPServerURL() != null) {

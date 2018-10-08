@@ -9,7 +9,8 @@
          http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<!-- a bean for order service -->
-	<bean id="endDeviceControlsService" class="com.sixthc.ecg.impl.EndDeviceControlsServiceImpl" />
+	<bean id="endDeviceControlsService"
+		class="com.sixthc.ecg.impl.EndDeviceControlsServiceImpl" />
 
 	<camelContext
 		xmlns="http://camel.apache.org/schema/spring">
@@ -28,7 +29,7 @@
 		</onException>
 
 		<onException>
-			<exception>camelinaction.OrderNotFoundException</exception>
+			<exception>com.sixthc.ecg.DeviceNotFoundException</exception>
 			<handled>
 				<constant>true</constant>
 			</handled>
@@ -54,9 +55,8 @@
 		</onException>
 
 		<restConfiguration component="servlet"
-			bindingMode="json" contextPath="cim4/rest"
-			port="8080" apiContextPath="api-doc" apiContextListing="true"
-			enableCORS="true">
+			bindingMode="json" contextPath="cim4/rest" port="8080"
+			apiContextPath="api-doc" apiContextListing="true" enableCORS="true">
 
 			<!-- we want json output in pretty mode -->
 			<dataFormatProperty key="prettyPrint" value="true" />
@@ -77,20 +77,28 @@
 			produces="application/json">
 			<description>CIMRequest</description>
 
-			<get uri="/{mrid}" outType="ch.iec.tc57._2011.schema.message.ReplyType">
+			<get uri="/{mrid}"
+				outType="ch.iec.tc57._2011.schema.message.ReplyType">
 				<description>Returns a end device controls message</description>
 				<param name="id" type="path" description="The order id" />
 				<responseMessage code="200"
-					message="The order with the given id" />
+					message="The End Device Controls Entry with MRID" />
 				<responseMessage code="404"
-					message="Order not found" />
+					message="End Device Controls with MRID not found" />
 				<responseMessage code="500" message="Server error" />
-				<to uri="bean:endDeviceControlsService?method=get(${header.mrid})" />
+				<to
+					uri="bean:endDeviceControlsService?method=get(${header.mrid})" />
 			</get>
-			<post uri="/create" type="com.sixthc.ecg.jsonpojo.CreateEndDeviceControls" outType="ch.iec.tc57._2011.schema.message.ReplyType">
-			<description>Posts end device controls request</description>
-			<responseMessage code="400" message="insufficient/invalid input data" />
-			<to uri="bean:endDeviceControlsService?method=create" />
+			<post uri="/create"
+				type="com.sixthc.ecg.jsonpojo.CreateEndDeviceControls"
+				outType="ch.iec.tc57._2011.schema.message.ReplyType">
+				<description>Posts end device controls request</description>
+								<responseMessage code="200"
+					message="End Device Controls created" />
+				<responseMessage code="400"
+					message="insufficient/invalid input data" />
+				<responseMessage code="500" message="Server error" />
+				<to uri="bean:endDeviceControlsService?method=create" />
 			</post>
 		</rest>
 
