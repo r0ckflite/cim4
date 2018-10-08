@@ -11,6 +11,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +54,7 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public XMLGregorianCalendar stringToDate(String dt) throws ParseException, DatatypeConfigurationException {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date date = format.parse(dt);
@@ -61,7 +62,7 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
 
-		XMLGregorianCalendar xmlGregCal =  DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+		XMLGregorianCalendar xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
 		return xmlGregCal;
 
 	}
@@ -78,6 +79,13 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 		ExecuteEndDeviceControls ss = new ExecuteEndDeviceControls(wsdlURL, SERVICE_NAME);
 		EndDeviceControlsPort port = ss.getEndDeviceControlsPort();
 
+		// Set the SOAP server address dynamically based on SOAPServerURL
+		if (group.getSOAPServerURL() != null) {
+			logger.debug("setting SOAP endpoint to " + group.getSOAPServerURL());
+			BindingProvider provider = (BindingProvider) port;
+			provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, group.getSOAPServerURL());
+		}
+
 		{
 			logger.debug("Invoking createEndDeviceControls...");
 			ch.iec.tc57._2011.schema.message.HeaderType _createEndDeviceControls_headerVal = null;
@@ -88,7 +96,6 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 			javax.xml.ws.Holder<ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType> _createEndDeviceControls_payload = new javax.xml.ws.Holder<ch.iec.tc57._2017.enddevicecontrolsmessage.EndDeviceControlsPayloadType>(
 					payload);
 			javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.ReplyType> _createEndDeviceControls_reply = new javax.xml.ws.Holder<ch.iec.tc57._2011.schema.message.ReplyType>();
-
 
 			// Populate header data from POJO to SOAP message
 			if (group.getHeader() != null) {
@@ -108,9 +115,9 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 				header.value.setMessageID(group.getHeader().getMessageID());
 				header.value.setCorrelationID(group.getHeader().getCorrelationID());
 			}
-			
+
 			// Populate payload from POJO to SOAP message
-			if( group.getPayload() != null ) {
+			if (group.getPayload() != null) {
 
 				EndDeviceControls edcs = new EndDeviceControls();
 				payload.setEndDeviceControls(edcs);
@@ -118,15 +125,16 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 				edcs.getEndDeviceControl().add(edc);
 				edc.setMRID(group.getPayload().getEndDeviceControls().getEndDeviceControl().getMRID());
 				EndDeviceControlType edct = new EndDeviceControlType();
-				edct.setRef(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceControlType().getRef());
+				edct.setRef(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceControlType()
+						.getRef());
 				edc.setEndDeviceControlType(edct);
 				EndDeviceGroup edg = new EndDeviceGroup();
 				edc.getEndDeviceGroups().add(edg);
 				Name name = new Name();
-				name.setName(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceGroups().getNames().getName());
+				name.setName(group.getPayload().getEndDeviceControls().getEndDeviceControl().getEndDeviceGroups()
+						.getNames().getName());
 				edg.getNames().add(name);
 			}
-			
 
 			try {
 				port.createEndDeviceControls(header, _createEndDeviceControls_request, _createEndDeviceControls_payload,

@@ -1,5 +1,6 @@
 {
    "@schemaLocation": "http://iec.ch/TC57/2017/EndDeviceControlsMessage EndDeviceControlsMessage.xsd",
+   "SOAPServerURL": "?",
    "Header": {
       "Verb": "?",
       "Noun": "?",
