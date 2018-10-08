@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.sixthc.ecg.DeviceInvalidException;
 import com.sixthc.ecg.DeviceNotFoundException;
 import com.sixthc.ecg.EndDeviceControlsService;
+import com.sixthc.ecg.InvalidJSON;
 import com.sixthc.ecg.jsonpojo.CreateEndDeviceControls;
 
 import ch.iec.tc57._2011.enddevicecontrols_.EndDeviceControl;
@@ -68,9 +69,14 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 	}
 
 	@Override
-	public ReplyType create(CreateEndDeviceControls group) throws DeviceInvalidException {
+	public ReplyType create(CreateEndDeviceControls group) throws DeviceInvalidException, InvalidJSON {
 		logger.debug("create : "
 				+ String.valueOf(group.getPayload().getEndDeviceControls().getEndDeviceControl().getMRID()));
+		
+		logger.debug("forceError = " + group.getForceError());
+		if (group.getForceError() != null & "true".equals(group.getForceError())) {
+			throw new InvalidJSON("forced error");
+		}
 
 		final QName SERVICE_NAME = new QName("http://iec.ch/TC57/2017/ExecuteEndDeviceControls",
 				"ExecuteEndDeviceControls");
@@ -78,6 +84,8 @@ public class EndDeviceControlsServiceImpl implements EndDeviceControlsService {
 
 		ExecuteEndDeviceControls ss = new ExecuteEndDeviceControls(wsdlURL, SERVICE_NAME);
 		EndDeviceControlsPort port = ss.getEndDeviceControlsPort();
+
+
 
 		// Set the SOAP server address dynamically based on SOAPServerURL
 		if (group.getSOAPServerURL() != null) {

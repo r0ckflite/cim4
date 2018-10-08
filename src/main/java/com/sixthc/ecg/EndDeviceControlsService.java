@@ -13,7 +13,7 @@ public interface EndDeviceControlsService {
 
     void update(CreateEndDeviceControls group) throws DeviceInvalidException;
 
-    ReplyType create(CreateEndDeviceControls group) throws DeviceInvalidException;
+    ReplyType create(CreateEndDeviceControls group) throws DeviceInvalidException,InvalidJSON;
 
     void cancel(int mrid);
     

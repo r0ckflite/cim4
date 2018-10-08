@@ -15,7 +15,7 @@
 		xmlns="http://camel.apache.org/schema/spring">
 
 		<onException>
-			<exception>camelinaction.OrderInvalidException</exception>
+			<exception>com.sixthc.ecg.InvalidJSON</exception>
 			<handled>
 				<constant>true</constant>
 			</handled>
@@ -23,7 +23,7 @@
 				<constant>400</constant>
 			</setHeader>
 			<setBody>
-				<constant />
+				<simple>${exception.message}\n</simple>
 			</setBody>
 		</onException>
 
@@ -89,6 +89,7 @@
 			</get>
 			<post uri="/create" type="com.sixthc.ecg.jsonpojo.CreateEndDeviceControls" outType="ch.iec.tc57._2011.schema.message.ReplyType">
 			<description>Posts end device controls request</description>
+			<responseMessage code="400" message="insufficient/invalid input data" />
 			<to uri="bean:endDeviceControlsService?method=create" />
 			</post>
 		</rest>

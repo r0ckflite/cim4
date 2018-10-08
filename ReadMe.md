@@ -99,7 +99,11 @@ Currently it :
 	3. sends soap message to remote server
 	4. (currently) skips transforming the SOAP reply to JSON, and just returns the XML, which is auto-converted to JSON by service
 
-    curl -X POST -H "Content-Type: application/json" -d '{ "@schemaLocation": "http://iec.ch/TC57/2017/EndDeviceControlsMessage EndDeviceControlsMessage.xsd", "SoapServerURL": "http://localhost:8088/mockEndDeviceControls", "Header": { "Verb": "create", "Noun": "EndDeviceControls", "Timestamp": "2017-06-20T11:24:04-06:00", "MessageID": "aab72e66-d8b4-406c-8e18-4df2864cf947", "CorrelationID": "3a913c02-bc54-4a63-b82a-b255ffa0b7da" }, "Payload": {   "EndDeviceControls": {  "EndDeviceControl": {  "mRID": "2b928834-b538-4244-9daf-6db54f700a76", "EndDeviceControlType": {           "@ref": "2.31.0.18" }, "EndDeviceGroups": { "Names": { "name": "DG2"  }  }  }  }  } }' http://localhost:8080/cim4/rest/endDeviceControls/create
+## POST create 
+    curl -v -X POST -H "Content-Type: application/json" -d '{ "@schemaLocation": "http://iec.ch/TC57/2017/EndDeviceControlsMessage EndDeviceControlsMessage.xsd", "SoapServerURL": "http://localhost:8088/mockEndDeviceControls", "Header": { "Verb": "create", "Noun": "EndDeviceControls", "Timestamp": "2017-06-20T11:24:04-06:00", "MessageID": "aab72e66-d8b4-406c-8e18-4df2864cf947", "CorrelationID": "3a913c02-bc54-4a63-b82a-b255ffa0b7da" }, "Payload": {   "EndDeviceControls": {  "EndDeviceControl": {  "mRID": "2b928834-b538-4244-9daf-6db54f700a76", "EndDeviceControlType": {           "@ref": "2.31.0.18" }, "EndDeviceGroups": { "Names": { "name": "DG2"  }  }  }  }  } }' http://localhost:8080/cim4/rest/endDeviceControls/create
+  
+## POST and force error, 400  
+    curl -v -X POST -H "Content-Type: application/json" -d '{ "@schemaLocation": "http://iec.ch/TC57/2017/EndDeviceControlsMessage EndDeviceControlsMessage.xsd", "SoapServerURL": "http://localhost:8088/mockEndDeviceControls", "ForceError": "true", "Header": { "Verb": "create", "Noun": "EndDeviceControls", "Timestamp": "2017-06-20T11:24:04-06:00", "MessageID": "aab72e66-d8b4-406c-8e18-4df2864cf947", "CorrelationID": "3a913c02-bc54-4a63-b82a-b255ffa0b7da" }, "Payload": {   "EndDeviceControls": {  "EndDeviceControl": {  "mRID": "2b928834-b538-4244-9daf-6db54f700a76", "EndDeviceControlType": {           "@ref": "2.31.0.18" }, "EndDeviceGroups": { "Names": { "name": "DG2"  }  }  }  }  } }' http://localhost:8080/cim4/rest/endDeviceControls/create
 
-
+## GET (example, not properly part of the wsdl)
 	http://localhost:8080/cim4/rest/endDeviceControls/1
