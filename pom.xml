@@ -4,16 +4,25 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.camelinaction</groupId>
-		<artifactId>chapter10</artifactId>
-		<version>2.0.0</version>
-		<relativePath>./pom2.xml</relativePath>
-	</parent>
+	<!-- <parent> <groupId>com.camelinaction</groupId> <artifactId>chapter10</artifactId> 
+		<version>2.0.0</version> <relativePath>./pom2.xml</relativePath> </parent> -->
 
 	<artifactId>cim4</artifactId>
-	<name>Camel in Action 2 :: Chapter 10 :: REST with Servlet and Swagger using XML DSL</name>
+	<name>CIM4 : JSON to SOAP with swagger</name>
+	<groupId>com.sixthc.ecg</groupId>
+	<version>1.0</version>
 	<packaging>war</packaging>
+	<properties>
+		<camel-version>2.21.1</camel-version>
+		<spring-version>4.3.14.RELEASE</spring-version>
+		<spring-boot-version>1.5.12.RELEASE</spring-boot-version>
+		<slf4j-version>1.7.21</slf4j-version>
+		<jackson-version>2.8.10</jackson-version>
+		<jetty9-plugin-version>9.2.21.v20170120</jetty9-plugin-version>
+		<jetty-plugin-version>8.1.17.v20150415</jetty-plugin-version>
+		<log4j-version>1.2.17</log4j-version>
+	</properties>
+
 
 	<dependencies>
 
@@ -26,29 +35,33 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-spring</artifactId>
+			<version>${camel-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-servlet</artifactId>
+			<version>${camel-version}</version>
 		</dependency>
 
 		<!-- overcome jboss class loader problem -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>javax.xml.ws</groupId> -->
-<!-- 			<artifactId>jaxws-api</artifactId> -->
-<!-- 			<version>2.2.8</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.sun.xml.ws</groupId> -->
-<!-- 			<artifactId>jaxws-rt</artifactId> -->
-<!-- 			<version>2.1.4</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>javax.xml.ws</groupId> -->
+		<!-- <artifactId>jaxws-api</artifactId> -->
+		<!-- <version>2.2.8</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.sun.xml.ws</groupId> -->
+		<!-- <artifactId>jaxws-rt</artifactId> -->
+		<!-- <version>2.1.4</version> -->
+		<!-- </dependency> -->
 
 		<!-- we need spring web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
+			<version>${spring-version}</version>
 		</dependency>
+
 
 		<!-- swagger support -->
 		<dependency>
@@ -68,12 +81,21 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
 		</dependency>
 
+
+<!-- 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+ -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -83,6 +105,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-version}</version>
 		</dependency>
 
 	</dependencies>

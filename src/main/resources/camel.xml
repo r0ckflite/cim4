@@ -8,7 +8,7 @@
          http://camel.apache.org/schema/spring 
          http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<!-- a bean for order service -->
+	<!-- a bean for Device Control Service service -->
 	<bean id="endDeviceControlsService"
 		class="com.sixthc.ecg.impl.EndDeviceControlsServiceImpl" />
 
@@ -65,11 +65,11 @@
 			<apiProperty key="base.path" value="rest" />
 			<apiProperty key="api.version" value="2.0.0" />
 			<apiProperty key="api.title"
-				value="Rider Auto Parts Order Services" />
+				value="End Device Controls" />
 			<apiProperty key="api.description"
-				value="Order Service that allows customers to submit orders and query status" />
+				value="Execute End Device Controls Create/Get Service" />
 			<apiProperty key="api.contact.name"
-				value="Rider Auto Parts" />
+				value="Sixthc" />
 
 		</restConfiguration>
 
@@ -80,7 +80,7 @@
 			<get uri="/{mrid}"
 				outType="ch.iec.tc57._2011.schema.message.ReplyType">
 				<description>Returns a end device controls message</description>
-				<param name="id" type="path" description="The order id" />
+				<param name="id" type="path" description="The MRID" />
 				<responseMessage code="200"
 					message="The End Device Controls Entry with MRID" />
 				<responseMessage code="404"
@@ -101,44 +101,6 @@
 				<to uri="bean:endDeviceControlsService?method=create" />
 			</post>
 		</rest>
-
-		<!-- <rest path="/orders" consumes="application/json" produces="application/json"> -->
-		<!-- <description>Order Service</description> -->
-
-		<!-- <get uri="/{id}" outType="camelinaction.Order"> -->
-		<!-- <description>Service to get details of an existing order</description> -->
-		<!-- <param name="id" type="path" description="The order id"/> -->
-		<!-- <responseMessage code="200" message="The order with the given id"/> -->
-		<!-- <responseMessage code="404" message="Order not found"/> -->
-		<!-- <responseMessage code="500" message="Server error"/> -->
-		<!-- <to uri="bean:orderService?method=getOrder(${header.id})"/> -->
-		<!-- </get> -->
-
-		<!-- <post type="camelinaction.Order" outType="String"> -->
-		<!-- <description>Service to submit a new order</description> -->
-		<!-- <responseMessage code="200" message="The created order id"/> -->
-		<!-- <responseMessage code="400" message="Invalid input data"/> -->
-		<!-- <responseMessage code="500" message="Server error"/> -->
-		<!-- <to uri="bean:orderService?method=createOrder"/> -->
-		<!-- </post> -->
-
-
-		<!-- <put type="camelinaction.Order"> -->
-		<!-- <description>Service to update an existing order</description> -->
-		<!-- <responseMessage code="400" message="Invalid input data"/> -->
-		<!-- <responseMessage code="500" message="Server error"/> -->
-		<!-- <to uri="bean:orderService?method=updateOrder"/> -->
-		<!-- </put> -->
-
-		<!-- <delete uri="{id}"> -->
-		<!-- <description>Service to cancel an existing order</description> -->
-		<!-- <param name="id" type="path" description="The order id"/> -->
-		<!-- <responseMessage code="404" message="Order not found"/> -->
-		<!-- <responseMessage code="500" message="Server error"/> -->
-		<!-- <to uri="bean:orderService?method=cancelOrder(${header.id})"/> -->
-		<!-- </delete> -->
-
-		<!-- </rest> -->
 
 	</camelContext>
 
